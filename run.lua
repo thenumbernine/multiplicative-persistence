@@ -15,24 +15,27 @@ local function pers(x)
 end
 
 --[[
-1 = 2
-2 = 25
-3 = 39
-4 = 77
-5 = 679
-6 = 6788
-7 = 68889
+1	2
+2	25
+3	39
+4	77
+5	679
+6	6788
+7	68889
+8	2677889	
+9	26888999
+10	3778888999
+11	277777788888899
+12	
 --]]
-
---local x = big'277777788888899'
 
 local count = 0
 local maxsofar = 0
-for len=5,5 do
+for len=15,math.huge do
 	local x = big()
 	x.minExp = 0
 	for i=0,len-1 do
-		x[i] = 1
+		x[i] = 2
 	end
 	local done
 	while not done do
@@ -49,6 +52,7 @@ for len=5,5 do
 		local p = pers(x)
 		maxsofar = math.max(maxsofar, p)
 		print(x, pers(x), maxsofar)
+if maxsofar == 12 then os.exit() end
 
 		local inc = false
 		for i=0,len-1 do
