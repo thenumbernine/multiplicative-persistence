@@ -1,4 +1,5 @@
 local big = require 'bignumber'
+local productofdigits = require 'productofdigits'
 -- report the number of steps of this multiplication-persistence
 local function pers(x)
 	for i=1,math.huge do

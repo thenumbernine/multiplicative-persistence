@@ -104,17 +104,27 @@ elseif cmd == 'graph' then
 		return depth
 	end
 
+	local maxdepth = 0
+	local function gfollow(x,xstr)
+		local depth = follow(x,xstr)
+		if depth > maxdepth then
+			maxdepth = depth
+			io.stderr:write('next biggest depth=',depth,' x=',xstr,'\n')
+			io.stderr:flush()
+		end
+	end
+
 	for x in alloflen(1,11) do
 		-- first trace the 1-digits back
 		local xstr = tostring(x)
-		follow(x,xstr)
+		gfollow(x,xstr)
 
 		-- then trace the 1-digits forward
 		local win, fs = checkFactors(x)
 		if win then
 			local xstr = fs:map(tostring):concat()
 			local x = big(xstr)
-			follow(x,xstr)
+			gfollow(x,xstr)
 		end
 	end
 
