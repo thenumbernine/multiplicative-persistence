@@ -115,12 +115,12 @@ elseif cmd == 'graph' then
 		return depth
 	end
 
-	local maxdepth = 0
+	local smallestForPers = {}
 	local function gfollow(x,xstr)
 		local depth = follow(x,xstr)
-		if depth > maxdepth then
-			maxdepth = depth
-			io.stderr:write('next biggest depth=',depth,' x=',xstr,'\n')
+		if not smallestForPers[depth] or x < smallestForPers[depth] then
+			smallestForPers[depth] = big(x)
+			io.stderr:write('next smallest for depth=',depth,' is ',xstr,'\n')
 			io.stderr:flush()
 		end
 	end
@@ -143,6 +143,50 @@ elseif cmd == 'graph' then
 	end
 
 	print'}'
+elseif cmd == 'build' then	-- build up by searching 2^a * 3^b * 5^c * 7^d
+	local smallestForPers = {}
+	local lasttime = os.time()
+	for sum=0,math.huge do
+		local thistime = os.time()
+		if thistime ~= lasttime then
+			lasttime = thistime
+			print('sum of powers of primes: '..sum)
+		end
+		local _2a = big(1)
+		for a=0,sum do
+			local _3b = big(1)
+			for b=0,sum-a do
+				local _5c = big(1)
+				local pab = _2a * _3b
+				
+				local cmax = sum - a - b
+				if a > 0 then	-- if there's a 2's digit then don't use any 5's digits
+					cmax = 0
+				end
+				
+				for c=0,cmax do
+					local d = sum-a-b-c
+					
+					--local _7d = big(7)^big(d)
+					local _7d = big(7):intPow_simple(big(d))
+
+					local pcd = _5c * _7d
+					local x = pab * pcd
+					--local x = _2a * _3b * _5c * _7d
+				
+					local p = pers(x)
+					if not smallestForPers[p] or x < smallestForPers[p] then
+						smallestForPers[p] = big(x)
+						print(a,b,c,d,p,x)
+					end
+				
+					_5c = _5c * 5
+				end
+				_3b = _3b * 3
+			end
+			_2a = _2a * 2
+		end
+	end
 elseif cmd == 'search' then
 	local depth = tonumber(arg[2])
 	
