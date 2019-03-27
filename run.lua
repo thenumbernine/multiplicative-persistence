@@ -56,9 +56,12 @@ local function checkFactors(x)
 	local fs = factors(x)
 	local fail
 	for _,f in ipairs(fs) do
-		if f.maxExp and f.maxExp >= 1 then fail = true break end
+		if f.maxExp and f.maxExp >= 1 then 
+			fail = true 
+			break 
+		end
 	end
-	return not fail, fs
+	return (not fail), fs
 end
 
 local cmd = arg[1]
@@ -66,11 +69,22 @@ local cmd = arg[1]
 if cmd == 'check' then
 	local x = assert(arg[2])
 	x = big(x)
+	local origx = x
 	print('checking '..x)
-	local p = pers(x)
+	
+	--local p = pers(x)
+	local p
+	for i=1,math.huge do
+		p = i
+		x = productofdigits(x)
+		print(' -> '..tostring(x))
+		if not x.maxExp or x.maxExp <= 0 then break end
+	end
+
 	print('pers='..p)
-	local win, fs = checkFactors(x)
-	print('factors='..fs:map(tostring):concat',')
+	local win, fs = checkFactors(origx)
+	print('#factors', #fs)	
+	print('factors='..fs:map(tostring):concat', ')
 	if win then
 		print('ALL FACTORS ARE GOOD')
 	end

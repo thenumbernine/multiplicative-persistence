@@ -1,8 +1,12 @@
 local big = require 'bignumber'
 local table = require 'ext.table'
 local function factors(x)
-	if x <= big(1) then return table() end
-	if x == big(2) then return table{x} end
+	if x <= big(1) then 
+		return table() 
+	end
+	if x == big(2) then 
+		return table{x} 
+	end
 
 	local t = table()
 	local i = big(2)
