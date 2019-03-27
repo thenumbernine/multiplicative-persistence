@@ -91,11 +91,8 @@ if cmd == 'check' then
 elseif cmd == 'graph' then
 	
 	print'digraph G {'
-	local lastset = {['0'] = true}
 	
 	local depthForNumber = table()
-
-	-- TODO call this from pers(x)
 
 	local function follow(x,xstr)
 		local depth = depthForNumber[xstr]
@@ -104,7 +101,7 @@ elseif cmd == 'graph' then
 		local nx = productofdigits(x)
 		if nx == x then nx = big(0) end
 		local nxstr = tostring(nx)
-		local ndepth = nxstr == '0' and -1 or depthForNumber[nxstr]
+		local ndepth = #nxstr == 1 and 0 or depthForNumber[nxstr]
 		if not ndepth then
 			ndepth = follow(nx,nxstr)
 		end
@@ -134,11 +131,14 @@ elseif cmd == 'graph' then
 		gfollow(x,xstr)
 
 		-- then trace the 1-digits forward
-		local win, fs = checkFactors(x)
-		if win then
+		while true do
+			local win, fs = checkFactors(x)
+			if not win then break end
 			local xstr = fs:map(tostring):concat()
-			local x = big(xstr)
+			if depthForNumber[xstr] then break end
+			x = big(xstr)
 			gfollow(x,xstr)
+			-- check the new x's factors as well
 		end
 	end
 
