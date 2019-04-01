@@ -144,14 +144,11 @@ elseif cmd == 'graph' then
 
 	print'}'
 elseif cmd == 'build' then	-- build up by searching 2^a * 3^b * 5^c * 7^d
+	local startsum = tonumber(arg[2]) or 0
+	
 	local smallestForPers = {}
 	local lasttime = os.time()
-	for sum=0,math.huge do
-		local thistime = os.time()
-		if thistime ~= lasttime then
-			lasttime = thistime
-			print('sum of powers of primes: '..sum)
-		end
+	for sum=startsum,math.huge do
 		local _2a = big(1)
 		for a=0,sum do
 			local _3b = big(1)
@@ -179,7 +176,15 @@ elseif cmd == 'build' then	-- build up by searching 2^a * 3^b * 5^c * 7^d
 						smallestForPers[p] = big(x)
 						print(a,b,c,d,p,x)
 					end
-				
+			
+
+					local thistime = os.time()
+					if thistime ~= lasttime then
+						lasttime = thistime
+						print('sum of powers of primes: '..sum)
+					end				
+					
+					
 					_5c = _5c * 5
 				end
 				_3b = _3b * 3
