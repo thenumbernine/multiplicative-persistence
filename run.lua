@@ -86,7 +86,7 @@ if cmd == 'check' then
 	print('#factors', #fs)	
 	print('factors='..fs:map(tostring):concat', ')
 	if win then
-		print('ALL FACTORS ARE GOOD')
+		print('ALL FACTORS ARE SINGLE DIGIT NUMBERS')
 	end
 elseif cmd == 'graph' then
 	
@@ -145,10 +145,16 @@ elseif cmd == 'graph' then
 	print'}'
 elseif cmd == 'build' then	-- build up by searching 2^a * 3^b * 5^c * 7^d
 	local startsum = tonumber(arg[2]) or 0
-	
+	local endsum = tonumber(arg[3]) or math.huge
+	local firstpers = tonumber(arg[4]) or -1		-- set this to skip tracking smallest pers <= this pers
+
 	local smallestForPers = {}
-	local lasttime = os.time()
-	for sum=startsum,math.huge do
+	for i=0,firstpers do
+		smallestForPers[i] = big(1)^big(100)
+	end
+	
+	for sum=startsum,endsum do
+		print('a+b+c+d='..sum..':')
 		local _2a = big(1)
 		for a=0,sum do
 			local _3b = big(1)
@@ -176,14 +182,6 @@ elseif cmd == 'build' then	-- build up by searching 2^a * 3^b * 5^c * 7^d
 						smallestForPers[p] = big(x)
 						print(a,b,c,d,p,x)
 					end
-			
-
-					local thistime = os.time()
-					if thistime ~= lasttime then
-						lasttime = thistime
-						print('sum of powers of primes: '..sum)
-					end				
-					
 					
 					_5c = _5c * 5
 				end

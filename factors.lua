@@ -24,8 +24,8 @@ local function factors(x)
 			i = two
 			isq = four
 		else
-			i = i + 1
-			isq = isq + i * 2 - 1
+			i = i + one
+			isq = isq + i * two - one
 		end
 	end
 	if x > one then t:insert(x) end
