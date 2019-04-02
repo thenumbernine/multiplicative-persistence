@@ -5,11 +5,12 @@ local pers = require 'pers'
 local factors = require 'factors'
 local productofdigits = require 'productofdigits'
 
-local function alloflen(startlen,endlen)
+local function alloflen(startlen,endlen, base)
+	base = base or 10
 	return coroutine.wrap(function()
 		endlen = endlen or startlen  
 		for len=startlen,endlen do
-			local x = big()
+			local x = big(0, base)
 			x.minExp = 0
 			for i=0,len-1 do
 				x[i] = 2
@@ -33,7 +34,7 @@ local function alloflen(startlen,endlen)
 					end
 					inc = false
 					x[i] = x[i] + 1
-					if x[i] < 10 then break end
+					if x[i] < base then break end
 					x[i] = x[i+1]
 					if i == len-1 then 
 						done = true 
@@ -68,7 +69,9 @@ local cmd = arg[1]
 
 if cmd == 'check' then
 	local x = assert(arg[2])
-	x = big(x)
+	local base = tonumber(arg[3]) or 10
+	
+	x = big(x, base)
 	local origx = x
 	print('checking '..x)
 	
@@ -76,7 +79,7 @@ if cmd == 'check' then
 	local p
 	for i=1,math.huge do
 		p = i
-		x = productofdigits(x)
+		x = productofdigits(x, base)
 		print(' -> '..tostring(x))
 		if not x.maxExp or x.maxExp <= 0 then break end
 	end
@@ -98,7 +101,7 @@ elseif cmd == 'graph' then
 		local depth = depthForNumber[xstr]
 		if depth then return depth end
 		depthForNumber[xstr] = 0
-		local nx = productofdigits(x)
+		local nx = productofdigits(x, 10)
 		if nx == x then nx = big(0) end
 		local nxstr = tostring(nx)
 		local ndepth = #nxstr == 1 and 0 or depthForNumber[nxstr]
@@ -147,7 +150,7 @@ elseif cmd == 'build' then	-- build up by searching 2^a * 3^b * 5^c * 7^d
 	local startsum = tonumber(arg[2]) or 0
 	local endsum = tonumber(arg[3]) or math.huge
 	local firstpers = tonumber(arg[4]) or -1		-- set this to skip tracking smallest pers <= this pers
-
+	
 	local smallestForPers = {}
 	for i=0,firstpers do
 		smallestForPers[i] = big{infinity=true}
@@ -192,18 +195,31 @@ elseif cmd == 'build' then	-- build up by searching 2^a * 3^b * 5^c * 7^d
 		end
 	end
 elseif cmd == 'search' then
-	local depth = tonumber(arg[2])
-	
-	local startlen = arg[3]
-	startlen = assert(tonumber(startlen), "couldn't convert "..tostring(startlen))
+	local startlen = tonumber(arg[2])
+	local endlen = tonumber(arg[3])
+	local depth = tonumber(arg[4])
+	local base = tonumber(arg[5]) or 10
 
+	local smallestForPers = {}
+
+	local pmax = 0
 	local count = 0
-	for x in alloflen(startlen) do
+	for x in alloflen(startlen, endlen, base) do
+assert(x.base == base)	
 		count = count + 1
 		local p = pers(x)
-		if p == depth then
-			local win, fs = checkFactors(x)
-			print(x, 'pers='..p..' factors='..fs:map(tostring):concat','..(win and ' WIN!' or ''))
+		pmax = math.max(pmax, p)
+		
+		if not depth or p == depth then
+			if not smallestForPers[p] or x < smallestForPers[p] then
+				smallestForPers[p] = big(x)
+				--local win, fs = checkFactors(x)
+				--fs = fs:map(function(f) return f:toBase(base) end)
+				print(x, 'pers='..p
+					--..' factors='..fs:map(tostring):concat','..(win and ' (all single digit)' or '')
+				)
+			end
 		end
 	end
+	print('max persistence '..pmax)
 end

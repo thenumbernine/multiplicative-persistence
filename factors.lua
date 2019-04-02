@@ -1,12 +1,12 @@
 local big = require 'bignumber'
 local table = require 'ext.table'
 
-local one = big(1)
-local two = big(2)
-local four = big(4)
-
 local function factors(x)
-	if x <= one then 
+	local one = big(1, x.base)
+	local two = big(2, x.base)
+	local four = big(4, x.base)
+	
+	if x <= 1 then 
 		return table() 
 	end
 	if x == two then 
@@ -24,11 +24,11 @@ local function factors(x)
 			i = two
 			isq = four
 		else
-			i = i + one
-			isq = isq + i * two - one
+			i = i + 1
+			isq = isq + i * two - 1
 		end
 	end
-	if x > one then t:insert(x) end
+	if x > 1 then t:insert(x) end
 	return t
 end
 return factors
