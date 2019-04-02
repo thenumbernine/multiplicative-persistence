@@ -150,17 +150,18 @@ elseif cmd == 'build' then	-- build up by searching 2^a * 3^b * 5^c * 7^d
 
 	local smallestForPers = {}
 	for i=0,firstpers do
-		smallestForPers[i] = big(1)^big(100)
+		smallestForPers[i] = big{infinity=true}
 	end
-	
+
+	local pow7s = {}
+
 	for sum=startsum,endsum do
 		print('a+b+c+d='..sum..':')
 		local _2a = big(1)
 		for a=0,sum do
-			local _3b = big(1)
+			local prod_2a_3b = big(_2a)
 			for b=0,sum-a do
-				local _5c = big(1)
-				local pab = _2a * _3b
+				local prod_2a_3b_5c = big(prod_2a_3b)
 				
 				local cmax = sum - a - b
 				if a > 0 then	-- if there's a 2's digit then don't use any 5's digits
@@ -170,12 +171,12 @@ elseif cmd == 'build' then	-- build up by searching 2^a * 3^b * 5^c * 7^d
 				for c=0,cmax do
 					local d = sum-a-b-c
 					
-					--local _7d = big(7)^big(d)
-					local _7d = big(7):intPow_simple(big(d))
-
-					local pcd = _5c * _7d
-					local x = pab * pcd
-					--local x = _2a * _3b * _5c * _7d
+					local _7d = pow7s[d]
+					if not _7d then
+						_7d = big.intPow_simple(7, d)
+						pow7s[d] = _7d
+					end
+					local x = prod_2a_3b_5c * _7d
 				
 					local p = pers(x)
 					if not smallestForPers[p] or x < smallestForPers[p] then
@@ -183,9 +184,9 @@ elseif cmd == 'build' then	-- build up by searching 2^a * 3^b * 5^c * 7^d
 						print(a,b,c,d,p,x)
 					end
 					
-					_5c = _5c * 5
+					prod_2a_3b_5c = prod_2a_3b_5c * 5
 				end
-				_3b = _3b * 3
+				prod_2a_3b = prod_2a_3b * 3
 			end
 			_2a = _2a * 2
 		end
