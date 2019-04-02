@@ -8,99 +8,24 @@ Recommended to run with luajit.
 
 What I've got so far:
 
-base 2:
+|P(n) \ base |2 |3   |4   |5                      |6     |7                  |8         |9       |10              |11       |12  |13       |14    |15      |16     |17     |18    |19     |20     |
+|------------|--|----|----|-----------------------|------|-------------------|----------|--------|----------------|---------|----|---------|------|--------|-------|-------|------|-------|-------|
+|2           |  |22  |22  |23                     |23    |24                 |24        |25      |25              |26       |26  |27       |27    |28      |28     |29     |29    |2a     |2a     |
+|3           |  |222 |333 |233                    |35    |36                 |37        |38      |39              |3a       |3a  |3b       |3c    |3d      |3e     |3f     |3f    |3g     |3h     |
+|4           |  |    |    |33334                  |444   |245                |256       |57      |77              |69       |6b  |5a       |5b    |5e      |5f     |5g     |5e    |5f     |6d     |
+|5           |  |    |    |444444444444           |24445 |4445               |2777      |477     |679             |269      |777 |9a       |99    |28c     |bb     |9f     |8d    |ab     |7j     |
+|6           |  |    |    |3344444444444444444444 |      |44556              |333555577 |45788   |6788            |3579     |aab |27a      |359   |8ae     |2ab    |ce     |2bb   |dh     |di     |
+|7           |  |    |    |                       |      |5555555            |          |2577777 |68889           |26778    |    |8ac      |ccc   |5bbb    |3dde   |3dd    |2ceg  |2bc    |6de    |
+|8           |  |    |    |                       |      |444555555555555666 |          |        |2677889         |47788a   |    |35ab     |359ab |bbbcc   |379bdd |9cf    |aabf  |7bg    |cgg    |
+|9           |  |    |    |                       |      |                   |          |        |26888999        |67899aaa |    |9bbb     |cdddd |2999bde |       |2aff   |8gghh |dii    |2bhi   |
+|10          |  |    |    |                       |      |                   |          |        |3778888999      |         |    |2999bbc  |      |        |       |55ddf  |      |4aah   |cdgg   |
+|11          |  |    |    |                       |      |                   |          |        |277777788888899 |         |    |28cccccc |      |        |       |39ddgg |      |3bgii  |2degj  |
+|12          |  |    |    |                       |      |                   |          |        |                |         |    |         |      |        |       |degggg |      |eefhh  |77bbhj |
+|13          |  |    |    |                       |      |                   |          |        |                |         |    |         |      |        |       |       |      |adeffh |       |
 
-every number is persistence 1
+This post has some other good information on searches: https://www.reddit.com/r/askmath/comments/b60mhl/why_are_the_search_spaces_for_multiplicative/
 
-base 3:
-
-|P(n) |n            |
-|-----|-------------|
-|1    |2            |
-|2    |22           |
-|3    |222          |
-
-base 4:
-
-|P(n) |n            |
-|-----|-------------|
-|1    |2            |
-|2    |22           |
-|3    |333          |
-
-base 5:
-
-|P(n) |n                     |
-|-----|----------------------|
-|1    |2                     |
-|2    |23                    |
-|3    |233                   |
-|4    |33334                 |
-|5    |444444444444          |
-|6    |3344444444444444444444|
-
-base 6:
-
-|P(n) |n    | 
-|-----|-----|
-|1    |2    |
-|2    |23   |
-|3    |35   |
-|4    |444  |
-|5    |24445|
-
-base 7:
-
-|P(n) |n                 |
-|-----|------------------|
-|1    |2                 |
-|2    |24                |
-|3    |36                |
-|4    |245               |
-|5    |4445              |
-|6    |44556             |
-|7    |5555555           |
-|8    |444555555555555666|
-
-base 8:
-
-|P(n) |n        |
-|-----|---------|
-|1    |2        |
-|2    |24       |
-|3    |37       |
-|4    |256      |
-|5    |2777     |
-|6    |333555577|
-
-base 9:
-
-|P(n) |n        |
-|-----|---------|
-|1    |2        |
-|2    |25       |
-|3    |38       |
-|4    |57       |
-|5    |477      |
-|6    |45788    |
-|7    |2577777  |
-
-base 10:
-
-|P(n) |n               |
-|-----|----------------|
-|1    |1               |
-|2    |25              |
-|3    |39              |
-|4    |77              |
-|5    |679             |
-|6    |6788            |
-|7    |68889           |
-|8    |2677889         |
-|9    |26888999        |
-|10   |3778888999      |
-|11   |277777788888899 |
-
+This tool is also being used to search for a persistence-12 in base 10, which has not yet been found.
 Results of ./run.lua build, only showing the successively smaller solutions per-persistence of m = 2^a * 3^b * 5^c * 7^d.
 From this we can claim n = 2...23...35...57...7, where 2's appear a times, 3's appear b times, 5's appear c times and 7's appear d times.
 We can also compact these digits, replacing every set of 222 with 8 and every set of 33 with 9, and every 23 with 6.
